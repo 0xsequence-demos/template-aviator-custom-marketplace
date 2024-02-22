@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {sequence} from '0xsequence'
-import { Button, Box, Card, Text, Modal,useTheme, TextInput, GradientAvatar } from '@0xsequence/design-system';
+import { Spinner, Button, Box, Card, Text, Modal,useTheme, TextInput, GradientAvatar } from '@0xsequence/design-system';
 import {ethers} from 'ethers'
 //@ts-ignore
 import TickerBoard from './TickerBoard'
@@ -24,7 +24,9 @@ import plane5 from './planes/Skyraider_Z-11_Onyx.png'
 import plane6 from './planes/Thunderbolt_XR-5_Cobalt.png'
 
 import { useOpenConnectModal } from '@0xsequence/kit'
-import { useDisconnect, useAccount } from 'wagmi'
+import { useDisconnect, useAccount, useWalletClient, useConnect} from 'wagmi'
+import { sendTransaction } from '@wagmi/core';
+import { config } from "./config"
 
 const planePanels = [plane1,plane2,plane3,plane4,plane5,plane6]
 
@@ -66,14 +68,14 @@ const ColorPanels = (props: any) => {
           <div
             key={index}
             className={`color-panel ${props.selectedId === index + 1 ? 'selected' : ''} ${props.selectedId !== null && props.selectedId !== index + 1 ? 'greyed-out' : ''}`}
-            style={{ backgroundImage: props.colored && props.colored.slice(1,props.colored.length-1)[index] > 0 ? `url(${planePanels[index]})` : '', backgroundColor: props.colored ?  props.colored.slice(1,props.colored.length-1)[index] > 0 ? color : 'grey' : color}}
+            style={{ backgroundImage: props.colored && props.colored.slice(1,props.colored.length)[index] > 0 ? `url(${planePanels[index]})` : '', backgroundColor: props.colored ?  props.colored.slice(1,props.colored.length-1)[index] > 0 ? color : 'grey' : color}}
             onClick={() => {
               if(props.market) {
-                props.setRequestId(props.requests.slice(1,props.requests.length-1)[index])
-                props.setPrice(props.prices.slice(1,props.prices.length-1)[index])
+                props.setRequestId(props.requests.slice(1,props.requests.length)[index])
+                props.setPrice(props.prices.slice(1,props.prices.length)[index])
               }
               props.setPlane && props.setPlane(planePanels[index])
-              if(props.colored&&props.colored.slice(1,props.colored.length-1)[index] > 0) handlePanelClick(index + 1)
+              if(props.colored&&props.colored.slice(1,props.colored.length)[index] > 0) handlePanelClick(index + 1)
               else if(!props.colored)  handlePanelClick(index + 1)
             }}
           >
@@ -100,7 +102,13 @@ function App() {
   const [requests, setRequests] = useState([])
   const [prices, setPrices] = useState([])
   const { setOpenConnectModal } = useOpenConnectModal()
-  const { isConnected } = useAccount()
+  const { address, isConnected } = useAccount()
+  const { data: walletClient } = useWalletClient({chainId: 137})
+  const { connectors } = useConnect()
+  const [isSequence, setIsSequence] = useState<any>(false)
+  const [isMinting, setIsMinting] = useState<any>(false)
+  const [isViewOrderbook, setIsViewOrderbook] = useState(false)
+
   const metadata: any = [
     ["Falcon Mark IV Redtail", "A sleek, high-speed interceptor with a gleaming scarlet finish."],
     ["Hawkwind P-22 Emerald", "A nimble, versatile fighter with a striking, metallic emerald green coat."],
@@ -115,6 +123,14 @@ function App() {
   useEffect(() => {
     // new TickerBoard('.create-ticker')
     setTimeout(async ()=>{
+      console.log(connectors.map(async (connector) => {
+        if(await connector.isAuthorized()){
+          if(connector.id == 'sequence'){
+            setIsSequence(true)
+          }
+        }
+      }))
+
       const res = await fetch('https://dev-marketplace-api.sequence.app/polygon/rpc/Marketplace/GetTopOrders', {
         method: 'POST',
         headers: {
@@ -122,7 +138,7 @@ function App() {
         },
         body: JSON.stringify({
             "collectionAddress": "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
-            "currencyAddresses": ["0x2791bca1f2de4661ed88a30c99a7a9449aa84174", "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"],
+            "currencyAddresses": ["0x2791bca1f2de4661ed88a30c99a7a9449aa84174"],
             "orderbookContractAddress": "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
             "tokenIDs": [
                 "0",
@@ -183,13 +199,16 @@ function App() {
     setTopOrders(object)
     setRequests(Object.values(requestList))
     setPrices(Object.values(prices))
-    }, 0)
-  }, [loggedIn])
+    }, 1000)
+  }, [loggedIn, toggleModal, isViewOrderbook, view])
 
   useEffect(() => {
     if(isConnected) setLoggedIn(true)
-  }, [])
+    if(isConnected)console.log(walletClient)
+    console.log(sequence.getWallet())
+  }, [isConnected])
   const connect = async () => {
+    disconnect()
     setOpenConnectModal(true)
     // const wallet = sequence.getWallet()
     // const details = await wallet.connect({app: 'sequence-market-feed'})
@@ -216,7 +235,7 @@ function App() {
       'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)*10**6]
     )
 
-    const txApprove = {
+    const txApprove: any = {
       to: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
       data: dataApprove
     }
@@ -227,8 +246,17 @@ function App() {
     }
 
     try {
-      const res = await signer.sendTransaction([txApprove,tx])
-      console.log(res)
+
+      if(isSequence){
+        const wallet = sequence.getWallet()
+        const signer = wallet.getSigner()
+        const res = await signer.sendTransaction([txApprove, tx])
+        console.log(res)
+      }else {
+
+      }
+      // const res = await signer.sendTransaction([txApprove,tx])
+      // console.log(res)
       setSelectedId(null)
     }catch(err){
     }
@@ -237,34 +265,107 @@ function App() {
   const mint = async () => {
     const wallet = sequence.getWallet()
     const signer = wallet.getSigner(137)
-    const erc1155Interface = new ethers.utils.Interface(["function mint(address to, uint256 tokenId, uint256 amount, bytes data) returns ()"])
-    console.log(selectedId)
-    const data = erc1155Interface.encodeFunctionData(
-      'mint', [await wallet.getAddress(),selectedId,1,"0x00"]
-    )
+    // const erc1155Interface = new ethers.utils.Interface(["function mint(address to, uint256 tokenId, uint256 amount, bytes data) returns ()"])
+    // console.log(selectedId)
+    // const data = erc1155Interface.encodeFunctionData(
+    //   'mint', [await wallet.getAddress(),selectedId,1,"0x00"]
+    // )
 
-    const tx = {
-      to: "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
-      data: data
+    // const tx = {
+    //   to: "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
+    //   data: data
+    // }
+    // const url = 'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
+    const url = 'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
+    console.log(address)
+const data = {
+  address: address,
+  tokenId: selectedId
+};
+
+async function postData() {
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
+    console.log(response);
+    setIsMinting(false)
+    setSelectedId(null)
+  } catch (error) {
+    console.error('Error:', error);
+    setIsMinting(false)
+  }
+}
+
+
+
     try {
-      const res = await signer.sendTransaction([tx])
-      console.log(res)
+      setIsMinting(true)
+      postData();
     }catch(err){
       console.log(err)
     }
   }
 
   const createOrder = async () => {
-    
-    const wallet = sequence.getWallet()
-    const signer = wallet.getSigner(137)
     const erc1155Interface = new ethers.utils.Interface(["function setApprovalForAll(address operator, bool approved) external"])
     const sequenceMarketInterface = new ethers.utils.Interface(SequenceMarketABI.abi)
 
-    const request = {
-        creator: await wallet.getAddress(),
+    if(isSequence){
+      const wallet = sequence.getWallet()
+      const signer = wallet.getSigner(137)
+
+      const request = {
+          creator: await wallet.getAddress(),
+          isListing: true,
+          isERC1155: true,
+          tokenContract: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
+          tokenId: selectedId,
+          quantity: quantity,
+          expiry: expiry,
+          currency: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+          pricePerToken: price
+      }
+
+      const data = sequenceMarketInterface.encodeFunctionData(
+        'createRequest', [request]
+      )
+
+      const dataApprove = erc1155Interface.encodeFunctionData(
+        'setApprovalForAll', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",true]
+      )
+
+      const tx = {
+        to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
+        data: data
+      }
+
+      const txApprove = {
+        to: "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
+        data: dataApprove
+      }
+
+      try {
+        const res = await signer.sendTransaction([txApprove,tx])
+        toggleModal(false)
+        setSelectedId(null)
+        setView(2)
+      }catch(err){
+        console.log(err)
+      }
+    } else {
+
+      const request = {
+        creator: walletAddress,
         isListing: true,
         isERC1155: true,
         tokenContract: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
@@ -273,32 +374,28 @@ function App() {
         expiry: expiry,
         currency: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
         pricePerToken: price
-    }
+      }
 
-    const data = sequenceMarketInterface.encodeFunctionData(
-      'createRequest', [request]
-    )
+      const data = sequenceMarketInterface.encodeFunctionData(
+        'createRequest', [request]
+      )
 
-    const dataApprove = erc1155Interface.encodeFunctionData(
-      'setApprovalForAll', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",true]
-    )
+      const dataApprove = erc1155Interface.encodeFunctionData(
+        'setApprovalForAll', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",true]
+      )
 
-    const tx = {
-      to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
-      data: data
-    }
+      const res1 = await sendTransaction(config, {
+        to: "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
+        data: dataApprove as `0x${string}`
+      })
 
-    const txApprove = {
-      to: "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
-      data: dataApprove
-    }
-
-    try {
-      const res = await signer.sendTransaction([txApprove,tx])
-      toggleModal(false)
+      const res2 = await sendTransaction(config, {
+        to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
+        data: data as `0x${string}`
+      })
+      setSelectedId(null)
       setView(2)
-    }catch(err){
-      console.log(err)
+      toggleModal(false)
     }
   }
 
@@ -309,14 +406,16 @@ function App() {
   const [expiry, setExpiry] = useState(null)
   const [walletAddress,setWalletAddress] = useState<any>(null)
   const [plane,setPlane] = useState<any>(null)
+  const {disconnect} = useDisconnect()
 
   useEffect(() => {
 
     setTimeout(async () => {
+      if(loggedIn){
+
       const indexer = new SequenceIndexer('https://polygon-indexer.sequence.app', 'c3bgcU3LkFR9Bp9jFssLenPAAAAAAAAAA')
 
-      const wallet = sequence.getWallet()
-      const accountAddress = await wallet.getAddress()
+      const accountAddress = address
       
       const tokenBalances = await indexer.getTokenBalances({
         accountAddress: accountAddress,
@@ -339,10 +438,11 @@ function App() {
       })
 
       setBalance(object)
+    }
+
     }, 0)
   }, [view])
 
-  const [isViewOrderbook, setIsViewOrderbook] = useState(false)
   const [orderbookListings, setOrderbookListings] = useState([])
 
   const viewOrderbook = async (fromTab = false) => {
@@ -360,7 +460,7 @@ function App() {
           },
           body: JSON.stringify({
               "collectionAddress": "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
-              "currencyAddresses": ["0x2791bca1f2de4661ed88a30c99a7a9449aa84174", "0x7ceb23fd6bc0add59e62ac25578270cff1b9f619"],
+              "currencyAddresses": ["0x2791bca1f2de4661ed88a30c99a7a9449aa84174"],
               "orderbookContractAddress": "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
               "tokenIDs": [selectedId
               ],
@@ -392,47 +492,171 @@ function App() {
 
   const fillOrderSpecific = async () => {
     const sequenceMarketInterface = new ethers.utils.Interface(SequenceMarketABI.abi)
-    const wallet = await sequence.getWallet()
-    const signer = await wallet.getSigner(137)
-
-    const data = sequenceMarketInterface.encodeFunctionData(
-      'acceptRequest', [requestId, 1, await wallet.getAddress(), [],[]]
-    )
-
-    const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
-
-    const dataApprove = erc20Interface.encodeFunctionData(
-      'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)*10**6]
-    )
-
-    const txApprove = {
-      to: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
-      data: dataApprove
-    }
-
-    const tx = {
-      to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
-      data: data
-    }
 
     try {
-      const res = await signer.sendTransaction([txApprove,tx])
-      console.log(res)
-    }catch(err){
+    if(isSequence){
+
+      const data = sequenceMarketInterface.encodeFunctionData(
+        'acceptRequest', [requestId, 1, address, [],[]]
+      )
+  
+      const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
+  
+      const dataApprove = erc20Interface.encodeFunctionData(
+        'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)*10**6]
+      )
+
+      const txApprove = {
+        to: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+        data: dataApprove
+      }
+
+      const tx = {
+        to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
+        data: data
+      }
+
+      const wallet = sequence.getWallet()
+      const signer = wallet.getSigner()
+
+      const res = await signer.sendTransaction([txApprove, tx])
+      setView(2)
+      setIsViewOrderbook(false)
+    }else {
+// const wallet = await sequence.getWallet()
+    // const signer = await wallet.getSigner(137)
+      const data = sequenceMarketInterface.encodeFunctionData(
+        'acceptRequest', [requestId, 1, address, [],[]]
+      )
+
+      const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
+
+      const dataApprove = erc20Interface.encodeFunctionData(
+        'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)*10**6]
+      )
+
+      try {
+        const res1 = await sendTransaction(config, {
+          to: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+          data: dataApprove as `0x${string}`
+        })
+
+        const res2 = await sendTransaction(config, {
+          to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
+          data: data as `0x${string}`
+        })
+        setView(2)
+        setIsViewOrderbook(false)
+      }
+      catch(err) {
+        console.log(err)
+      }
+    }
+
+    }  catch(err) {
+        console.log(err)
     }
   }
 
+
+  const [coinTickerBoard, setCoinTickerBoard] = useState<any>(null)
+  async function generateNumber() {
+    // List of Ethereum network URLs
+    const networkUrls = [
+      'https://nodes.sequence.app/mainnet/AQAAAAAAAAgNjIRFEAG0m21hy3oLEEKQLpo',
+      'https://nodes.sequence.app/base/AQAAAAAAAAgNjIRFEAG0m21hy3oLEEKQLpo',
+      'https://nodes.sequence.app/avalanche/AQAAAAAAAAgNjIRFEAG0m21hy3oLEEKQLpo',
+      'https://nodes.sequence.app/arbitrum-nova/AQAAAAAAAAgNjIRFEAG0m21hy3oLEEKQLpo'
+    ];
+      // Array to store each digit's value
+      const digits = [];
+    
+      for (const url of networkUrls) {
+        // Make an ethers call to the current network URL to get the block number
+        const provider = new ethers.providers.JsonRpcProvider(url);
+        const blockNumber = await provider.getBlockNumber();
+    
+        // Calculate TTL and mod 9 for each digit separately
+        const ttl = Math.floor(blockNumber / 9);
+        const digitValue = ttl % 9;
+    
+        // Push the digit value to the array
+        digits.push(digitValue);
+      }
+    
+      // Merge the digit values to generate the final number
+      const generatedNumber = digits.reduce((result, digit) => result * 10 + digit, 0);
+    
+      // Ensure the final number is between 0 and 9999
+      const finalNumber = generatedNumber % 10000;
+    
+      return finalNumber;
+    }
+
+  const request = async () => {
+    const number = Number(await generateNumber())
+    setIsMinting(true)
+
+    try {
+      // const url = 'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
+      const url = 'http://localhost:8787';
+      console.log(address)
+      const data = {
+        address: address,
+        amount: number
+      };
+
+        try {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+
+          console.log(response);
+          setIsMinting(false)
+          setCoinTickerBoard(<TickerBoard
+            messages={['꩜'+String(number)]}
+            count={1}
+            size={5}
+            theme={'dark'}
+          />)
+        } catch (error) {
+          console.error('Error:', error);
+          setIsMinting(false)
+          setCoinTickerBoard(<TickerBoard
+            messages={['꩜'+'Error']}
+            count={1}
+            size={5}
+            theme={'dark'}
+          />)
+        }
+
+  }catch(err){
+    console.log(err)
+  }
+}
+
   useEffect(() => {
 
-  }, [cardId])
-
+  }, [cardId, coinTickerBoard])
   return (
     <div className="App">
       {
         loggedIn ? 
           <>
           <br/>
-          <span onClick={() => {setView(0);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view == 0 ? '1' : '0'}px solid black`, display: 'inline-block'}}>mint</span>
+          {isConnected && <div style={{position: 'fixed', top: '20px', right: '30px'}}>
+            <span onClick={() => {setLoggedIn(false);disconnect()}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', display: 'inline-block'}}>sign out</span>
+          </div>}
+          {/* <span onClick={() => {setView(-1);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view == -1 ? '1' : '0'}px solid black`, display: 'inline-block'}}>faucet</span> */}
+          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(0);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view == 0 ? '1' : '0'}px solid black`, display: 'inline-block'}}>mint</span>
           &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(1);setSelectedId(null);viewOrderbook(true);}} style={{fontFamily: 'circular', cursor: 'pointer', color: 'black', paddingBottom: '5px', borderBottom: `${view == 1 ? '1' : '0'}px solid black`, display: 'inline-block'}}>market</span>
           &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(2);setSelectedId(null);}} style={{fontFamily: 'circular', cursor: 'pointer', color: 'black', paddingBottom: '5px', borderBottom: `${view == 2 ? '1' : '0'}px solid black`, display: 'inline-block'}}>sell</span>
           {
@@ -453,9 +677,9 @@ function App() {
                 </Box> 
                 <p style={{fontFamily: 'circular'}}>{selectedId && metadata[selectedId!-1][1]}</p>
                 <br/>
-                <Box justifyContent={'center'}>
+                {!isMinting ? <Box justifyContent={'center'}>
                   <Button disabled={selectedId == null} padding={"4"} label="mint" onClick={() => mint()}></Button>
-                </Box>
+                </Box> :  <Box justifyContent={'center'}><Spinner/></Box>}
               </>
             :
               view == 1 
@@ -525,6 +749,8 @@ function App() {
                 </div>
               </>
             :
+              view == 2 
+              ? 
               <>
                 <div className="parent">
                 <TickerBoard
@@ -541,6 +767,32 @@ function App() {
                 <Box justifyContent={'center'}>
                   <Button disabled={selectedId == null} padding={"4"} label="create order" onClick={() => toggleModal(true)}></Button>
                 </Box>  
+              </>
+              :
+              <>
+              <br/>
+              <br/>
+              <br/>
+              <br/>
+              <br/>
+              <br/>
+              <br/>
+
+                <div className="parent">
+                <TickerBoard
+                    messages={['FAUCET']}
+                    count={1}
+                    size={6}
+                    theme={'dark'}
+                  />
+                  {coinTickerBoard}
+                </div>
+                <br/>
+                <br/>
+                <br/>
+                <Box justifyContent={"center"}>
+                  {!isMinting ? <Button label="request" onClick={() => request()}/> : <Spinner/>}
+                </Box>
               </>
             } 
             <br/>

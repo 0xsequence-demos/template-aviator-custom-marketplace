@@ -6,11 +6,12 @@ import reportWebVitals from './reportWebVitals';
 import {ThemeProvider} from '@0xsequence/design-system'
 import '@0xsequence/design-system/styles.css'
 import { KitProvider } from '@0xsequence/kit'
-import { getDefaultConnectors } from '@0xsequence/kit-connectors'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createConfig, http, WagmiProvider, WagmiConfig } from 'wagmi'
 // import { createConfig} from '@wagmi/core'
 import { mainnet, polygon, Chain } from 'wagmi/chains'
+
+import {config} from './config'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -19,33 +20,12 @@ const root = ReactDOM.createRoot(
 const queryClient = new QueryClient() 
 
 function Dapp() {
-  const chains = [mainnet, polygon] as [Chain, ...Chain[]]
-  
-  const projectAccessKey = '<access-key>'
 
-  const connectors = getDefaultConnectors({
-    walletConnectProjectId: 'wallet-connect-id',
-    defaultChainId: 137,
-    appName: 'demo app',
-    projectAccessKey
-  })
-
-  const transports: any = {}
-
-  chains.forEach(chain => {
-    transports[chain.id] = http()
-  })
-  
-  const config = createConfig({
-    transports,
-    chains,
-    connectors
-  } as any)
 
   return (
     <WagmiConfig config={config}>
       <QueryClientProvider client={queryClient}> 
-        <KitProvider config={{}}>
+        <KitProvider config={{defaultTheme: 'light'}}>
         <ThemeProvider>
           <App />
         </ThemeProvider>
