@@ -138,7 +138,7 @@ function App() {
         },
         body: JSON.stringify({
             "collectionAddress": "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
-            "currencyAddresses": ["0x2791bca1f2de4661ed88a30c99a7a9449aa84174"],
+            "currencyAddresses": ["0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"],
             "orderbookContractAddress": "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
             "tokenIDs": [
                 "0",
@@ -185,16 +185,22 @@ function App() {
       5: 0,
       6: 0
     }
+    console.log(result.orders)
     result.orders.map(async (order: any) => {
       console.log('in this loop')
-      object[order.tokenId] = Number(order.pricePerToken)
-      // const res = await fetch(`https://metadata.sequence.app/tokens/${'polygon'}/${order.tokenContract}/${order.tokenId}`)
-      // const json = await res.json()
-      // console.log(json)
-      // order.image = json[0].image
-      // return order
-      requestList[order.tokenId] = order.orderId
-      prices[order.tokenId] = Number(order.pricePerToken)
+      console.log(order)
+      if(Number(order.pricePerToken) / 10**6 >= 0.01){
+
+        object[order.tokenId] = Number(Number(order.pricePerToken) / 10**6).toFixed(2)
+        // const res = await fetch(`https://metadata.sequence.app/tokens/${'polygon'}/${order.tokenContract}/${order.tokenId}`)
+        // const json = await res.json()
+        // console.log(json)
+        // order.image = json[0].image
+        // return order
+        requestList[order.tokenId] = order.orderId
+        prices[order.tokenId] = Number(order.pricePerToken).toFixed(2)
+      }
+
     })
     setTopOrders(object)
     setRequests(Object.values(requestList))
@@ -232,11 +238,11 @@ function App() {
     const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
 
     const dataApprove = erc20Interface.encodeFunctionData(
-      'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)*10**6]
+      'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)]
     )
 
     const txApprove: any = {
-      to: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+      to: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
       data: dataApprove
     }
 
@@ -319,7 +325,8 @@ async function postData() {
   const createOrder = async () => {
     const erc1155Interface = new ethers.utils.Interface(["function setApprovalForAll(address operator, bool approved) external"])
     const sequenceMarketInterface = new ethers.utils.Interface(SequenceMarketABI.abi)
-
+    console.log(price)
+    console.log('testing')
     if(isSequence){
       const wallet = sequence.getWallet()
       const signer = wallet.getSigner(137)
@@ -332,8 +339,8 @@ async function postData() {
           tokenId: selectedId,
           quantity: quantity,
           expiry: expiry,
-          currency: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
-          pricePerToken: price
+          currency: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+          pricePerToken: Math.floor(Number(price)*10**6)
       }
 
       const data = sequenceMarketInterface.encodeFunctionData(
@@ -372,7 +379,7 @@ async function postData() {
         tokenId: selectedId,
         quantity: quantity,
         expiry: expiry,
-        currency: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+        currency: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
         pricePerToken: price
       }
 
@@ -402,7 +409,7 @@ async function postData() {
   const aircraftNames = ['AVIATOR', "HANGAR"];
   const [balance, setBalance] = useState({})
   const [quantity, setQuantity] = useState(null)
-  const [price, setPrice] = useState(null)
+  const [price, setPrice] = useState<number>(0)
   const [expiry, setExpiry] = useState(null)
   const [walletAddress,setWalletAddress] = useState<any>(null)
   const [plane,setPlane] = useState<any>(null)
@@ -460,7 +467,7 @@ async function postData() {
           },
           body: JSON.stringify({
               "collectionAddress": "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
-              "currencyAddresses": ["0x2791bca1f2de4661ed88a30c99a7a9449aa84174"],
+              "currencyAddresses": ["0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"],
               "orderbookContractAddress": "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
               "tokenIDs": [selectedId
               ],
@@ -503,11 +510,11 @@ async function postData() {
       const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
   
       const dataApprove = erc20Interface.encodeFunctionData(
-        'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)*10**6]
+        'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)]
       )
 
       const txApprove = {
-        to: '0x2791bca1f2de4661ed88a30c99a7a9449aa84174',
+        to: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
         data: dataApprove
       }
 
@@ -532,12 +539,12 @@ async function postData() {
       const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
 
       const dataApprove = erc20Interface.encodeFunctionData(
-        'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)*10**6]
+        'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)]
       )
 
       try {
         const res1 = await sendTransaction(config, {
-          to: "0x2791bca1f2de4661ed88a30c99a7a9449aa84174",
+          to: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
           data: dataApprove as `0x${string}`
         })
 
@@ -730,7 +737,7 @@ async function postData() {
                       <span> {order.createdBy}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       <span>orderId: {order.orderId}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       <span>tokenId: {order.tokenId}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <span>${order.pricePerToken}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <span>${Number(order.pricePerToken) / 10**6}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </Card>
                     
                     })}
@@ -843,7 +850,7 @@ async function postData() {
                       <br/>
                       <TextInput  name="" placeholder="quantity" onChange={(value: any) => setQuantity(value.target.value)}/>
                       <br/>
-                      <TextInput  name="" placeholder="price" onChange={(value: any) => setPrice(value.target.value)}/>
+                      <TextInput  name="" placeholder="price" onChange={(value: any) => setPrice(Number(value.target.value))}/>
                       <br/>
                       <Box justifyContent={'center'}>
                         <Button disabled={selectedId == null} padding={"4"} label="submit" onClick={() => createOrder()}></Button>
