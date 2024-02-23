@@ -32,14 +32,12 @@ const planePanels = [plane1,plane2,plane3,plane4,plane5,plane6]
 
 function BasicDateTimePicker(props: any) {
   const [value, onChange] = useState<any>(new Date());
+  useEffect(() => {
+    props.setExpiry(Date.now() + (7 * 24 * 60 * 60 * 1000))
+  },[])
+
   return (
-    <DateTimePicker isCalendarOpen={false} 
-    onChange={(value) => {
-      console.log(value)
-      const epochTime = Date.parse(value!.toString()); // Convert milliseconds to seconds
-      props.setExpiry(epochTime)
-      onChange(value)
-  }} value={value} />
+      <></>
   );
 }
 
@@ -56,6 +54,7 @@ const ColorPanels = (props: any) => {
   ].reverse()
 
   const handlePanelClick = (id: any) => {
+    console.log(id)
     props.setSelectedId(id); // Update the selected panel ID
   };
 
@@ -70,6 +69,7 @@ const ColorPanels = (props: any) => {
             className={`color-panel ${props.selectedId === index + 1 ? 'selected' : ''} ${props.selectedId !== null && props.selectedId !== index + 1 ? 'greyed-out' : ''}`}
             style={{ backgroundImage: props.colored && props.colored.slice(1,props.colored.length)[index] > 0 ? `url(${planePanels[index]})` : '', backgroundColor: props.colored ?  props.colored.slice(1,props.colored.length-1)[index] > 0 ? color : 'grey' : color}}
             onClick={() => {
+
               if(props.market) {
                 props.setRequestId(props.requests.slice(1,props.requests.length)[index])
                 props.setPrice(props.prices.slice(1,props.prices.length)[index])
@@ -256,7 +256,7 @@ function App() {
         const signer = wallet.getSigner()
   
         const res = await signer.sendTransaction([txApprove, tx])
-        setView(2)
+        setView(1)
         setIsViewOrderbook(false)
       }else {
   // const wallet = await sequence.getWallet()
@@ -281,7 +281,7 @@ function App() {
             to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
             data: data as `0x${string}`
           })
-          setView(2)
+          setView(1)
           setIsViewOrderbook(false)
         }
         catch(err) {
@@ -868,9 +868,10 @@ async function postData() {
                       <br/>
                       <Text variant="normal" color="text80">
                         Enter your listing in USDC
+                        <br/>
+                        <br/>
+                        Note: The expiry is 7 days
                       </Text> 
-                      <br/>
-                      <br/>
                       <BasicDateTimePicker setExpiry={setExpiry}/>
                       <br/>
                       <br/>
