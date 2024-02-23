@@ -126,6 +126,7 @@ function App() {
       console.log(connectors.map(async (connector) => {
         if(await connector.isAuthorized()){
           if(connector.id == 'sequence'){
+            console.log('in here')
             setIsSequence(true)
           }
         }
@@ -226,46 +227,71 @@ function App() {
 
   const fillOrder = async () => {
     const sequenceMarketInterface = new ethers.utils.Interface(SequenceMarketABI.abi)
-    const wallet = await sequence.getWallet()
-    const signer = await wallet.getSigner(137)
-
-    console.log(requestId)
-    console.log(price)
-    const data = sequenceMarketInterface.encodeFunctionData(
-      'acceptRequest', [requestId, 1, await wallet.getAddress(), [],[]]
-    )
-
     const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
-
-    const dataApprove = erc20Interface.encodeFunctionData(
-      'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)]
-    )
-
-    const txApprove: any = {
-      to: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
-      data: dataApprove
-    }
-
-    const tx = {
-      to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
-      data: data
-    }
-
+  
     try {
-
       if(isSequence){
+  
+        const data = sequenceMarketInterface.encodeFunctionData(
+          'acceptRequest', [requestId, 1, address, [],[]]
+        )
+    
+        const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
+    
+        const dataApprove = erc20Interface.encodeFunctionData(
+          'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)]
+        )
+  
+        const txApprove = {
+          to: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+          data: dataApprove
+        }
+  
+        const tx = {
+          to: '0xB537a160472183f2150d42EB1c3DD6684A55f74c',
+          data: data
+        }
+  
         const wallet = sequence.getWallet()
         const signer = wallet.getSigner()
+  
         const res = await signer.sendTransaction([txApprove, tx])
-        console.log(res)
+        setView(2)
+        setIsViewOrderbook(false)
       }else {
-
+  // const wallet = await sequence.getWallet()
+      // const signer = await wallet.getSigner(137)
+        const data = sequenceMarketInterface.encodeFunctionData(
+          'acceptRequest', [requestId, 1, address, [],[]]
+        )
+  
+        const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
+  
+        const dataApprove = erc20Interface.encodeFunctionData(
+          'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)]
+        )
+  
+        try {
+          const res1 = await sendTransaction(config, {
+            to: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+            data: dataApprove as `0x${string}`
+          })
+  
+          const res2 = await sendTransaction(config, {
+            to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
+            data: data as `0x${string}`
+          })
+          setView(2)
+          setIsViewOrderbook(false)
+        }
+        catch(err) {
+          console.log(err)
+        }
       }
-      // const res = await signer.sendTransaction([txApprove,tx])
-      // console.log(res)
-      setSelectedId(null)
-    }catch(err){
-    }
+  
+      }  catch(err) {
+          console.log(err)
+      }
   }
 
   const mint = async () => {
@@ -380,7 +406,7 @@ async function postData() {
         quantity: quantity,
         expiry: expiry,
         currency: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
-        pricePerToken: price
+        pricePerToken: Math.floor(Number(price)*10**6)
       }
 
       const data = sequenceMarketInterface.encodeFunctionData(
@@ -660,7 +686,7 @@ async function postData() {
           <>
           <br/>
           {isConnected && <div style={{position: 'fixed', top: '20px', right: '30px'}}>
-            <span onClick={() => {setLoggedIn(false);disconnect()}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', display: 'inline-block'}}>sign out</span>
+            <span onClick={() => {setLoggedIn(false);disconnect(); setIsSequence(false)}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', display: 'inline-block'}}>sign out</span>
           </div>}
           {/* <span onClick={() => {setView(-1);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view == -1 ? '1' : '0'}px solid black`, display: 'inline-block'}}>faucet</span> */}
           &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(0);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view == 0 ? '1' : '0'}px solid black`, display: 'inline-block'}}>mint</span>
