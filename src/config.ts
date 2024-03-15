@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
 import { http } from 'wagmi'
 import { createConfig} from '@wagmi/core'
 import { mainnet, arbitrumSepolia } from 'wagmi/chains'

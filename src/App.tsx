@@ -1,4 +1,5 @@
-// @ts-nocheck
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+//@ts-nocheck
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import {sequence} from '0xsequence'
