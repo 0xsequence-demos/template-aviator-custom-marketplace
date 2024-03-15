@@ -471,10 +471,9 @@ async function postData() {
       }
 
       //@ts-ignore
-      const val = tokenBalances.balances.map((token) => {
+      const val = tokenBalances.balances.map((token) => (
         object[token.tokenID] = 1
-        return
-      })
+      ))
 
       console.log(val)
 
@@ -518,13 +517,10 @@ async function postData() {
 
       const listings: any = []
       //@ts-ignore
-      const val = result.orders.map((order: any) => {
+      const val = result.orders.map((order: any) => (
         //@ts-ignore
-        if(order.tokenId === selectedId){
-          listings.push(order)
-        }
-        return
-      })
+        order.tokenId === selectedId && listings.push(order)
+      ))
       console.log(val)
 
       setOrderbookListings(listings)
