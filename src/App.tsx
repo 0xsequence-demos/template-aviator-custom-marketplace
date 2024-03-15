@@ -264,13 +264,13 @@ function App() {
   
         try {
           //@ts-ignore
-          const res1 = await sendTransaction(config, {
+          await sendTransaction(config, {
             to: "0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7",
             data: dataApprove as `0x${string}`
           })
   
           //@ts-ignore
-          const res2 = await sendTransaction(config, {
+          await sendTransaction(config, {
             to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
             data: data as `0x${string}`
           })
@@ -387,7 +387,7 @@ async function postData() {
 
       try {
         //@ts-ignore
-        const res = await signer.sendTransaction([txApprove,tx])
+        await signer.sendTransaction([txApprove,tx])
         toggleModal(false)
         setSelectedId(null)
         setView(2)
@@ -448,6 +448,7 @@ async function postData() {
   const [quantity, setQuantity] = useState(null)
   const [price, setPrice] = useState<number>(0)
   const [expiry, setExpiry] = useState(null)
+  //@ts-ignore
   const [_,setWalletAddress] = useState<any>(null)
   const [plane,setPlane] = useState<any>(null)
   const {disconnect} = useDisconnect()
@@ -478,6 +479,7 @@ async function postData() {
         5: 0,
       }
 
+      //@ts-ignore
       tokenBalances.balances.map((token) => {
         object[token.tokenID] = 1
       })
@@ -486,6 +488,7 @@ async function postData() {
     }
 
     }, 0)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, isConnected])
 
   useEffect(() => {
@@ -570,7 +573,7 @@ async function postData() {
       const wallet = sequence.getWallet()
       const signer = wallet.getSigner()
 
-      const res = await signer.sendTransaction([txApprove, tx])
+      await signer.sendTransaction([txApprove, tx])
       setView(2)
       setIsViewOrderbook(false)
     }else {
@@ -589,15 +592,15 @@ async function postData() {
 
       try {
         //@ts-ignore
-        const res1 = await sendTransaction(config, {
+        await sendTransaction(config, {
           to: "0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7",
           data: dataApprove as `0x${string}`
         })
 
-        // const res2 = await sendTransaction(config, {
-        //   to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
-        //   data: data as `0x${string}`
-        // })
+        await sendTransaction(config, {
+          to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
+          data: data as `0x${string}`
+        })
         setView(2)
         setIsViewOrderbook(false)
       }
@@ -685,7 +688,7 @@ async function postData() {
           setIsMinting(false)
           setCoinTickerBoard(<TickerBoard
             //@ts-ignore
-            messages={['꩜'+'Error']}
+            messages={['꩜']}
             count={1}
             size={5}
             theme={'dark'}
