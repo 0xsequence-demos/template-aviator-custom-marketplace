@@ -22,22 +22,11 @@ import plane5 from './planes/Skyraider_Z-11_Onyx.png'
 import plane6 from './planes/Thunderbolt_XR-5_Cobalt.png'
 
 import { useOpenConnectModal } from '@0xsequence/kit'
-import { useDisconnect, useAccount, useWalletClient, useConnect} from 'wagmi'
+import { useDisconnect, useAccount, useConnect} from 'wagmi'
 import { sendTransaction } from '@wagmi/core';
 import { config } from "./config"
 
 const planePanels = [plane1,plane2,plane3,plane4,plane5,plane6]
-
-function BasicDateTimePicker(props: any) {
-  useEffect(() => {
-    props.setExpiry(Date.now() + (7 * 24 * 60 * 60 * 1000))
-  },[])
-
-  return (
-      <></>
-  );
-}
-
 const ColorPanels = (props: any) => {
   // for loading
   const colors = [
@@ -76,7 +65,7 @@ const ColorPanels = (props: any) => {
               else if(!props.colored)  handlePanelClick(index)
             }}
           >
-            {props.market == true && props.colored &&props.colored[index] > 0 && props.colored[index]}
+            {props.market === true && props.colored &&props.colored[index] > 0 && props.colored[index]}
             <span style={{fontSize: '10px'}}>{props.names && props.names[index] && props.names[index][0]}</span></div>
         ))}
       </div>
@@ -99,7 +88,6 @@ function App() {
   const [prices, setPrices] = useState([])
   const { setOpenConnectModal } = useOpenConnectModal()
   const { address, isConnected } = useAccount()
-  const { data: walletClient } = useWalletClient({chainId: 421614})
   const { connectors } = useConnect()
   const [isSequence, setIsSequence] = useState<any>(false)
   const [isMinting, setIsMinting] = useState<any>(false)
@@ -200,7 +188,7 @@ function App() {
     setRequests(Object.values(requestList))
     setPrices(Object.values(prices))
     }, 1000)
-  }, [loggedIn, toggleModal, isViewOrderbook, view])
+  }, [loggedIn, toggleModal, isViewOrderbook, view, connectors])
 
   useEffect(() => {
     if(isConnected) setLoggedIn(true)
@@ -452,7 +440,7 @@ async function postData() {
   const [_,setWalletAddress] = useState<any>(null)
   const [plane,setPlane] = useState<any>(null)
   const {disconnect} = useDisconnect()
-
+  console.log(_)
   useEffect(() => {
 
     setTimeout(async () => {
@@ -480,9 +468,11 @@ async function postData() {
       }
 
       //@ts-ignore
-      tokenBalances.balances.map((token) => {
+      const val = tokenBalances.balances.map((token) => {
         object[token.tokenID] = 1
       })
+
+      console.log(val)
 
       setBalance(object)
     }
@@ -524,17 +514,18 @@ async function postData() {
 
       const listings: any = []
       //@ts-ignore
-      result.orders.map((order: any) => {
+      const val = result.orders.map((order: any) => {
         //@ts-ignore
         if(order.tokenId === selectedId){
           listings.push(order)
         }
       })
+      console.log(val)
 
       setOrderbookListings(listings)
       }
     }, 0)
-  }, [isViewOrderbook])
+  }, [isViewOrderbook, selectedId])
 
   const [cardId, setCardId] = useState(null)
 
