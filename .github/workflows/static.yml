@@ -15,6 +15,30 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build webpack
+        env:
+          projectAccessKey: ${{ secrets.PROJECTACCESSKEY }}
+          waasConfigKey: ${{ secrets.WAASCONFIGKEY }}
+          projectId: ${{ secrets.PROJECTID }}
+          walletConnectId: ${{ secrets.WALLETCONNECTID }}
+          identityPoolId: ${{ secrets.IDENTITYPOOLID }}
+          emailClientId: ${{ secrets.EMAILCLIENTID }}
+          googleClientId: ${{ secrets.GOOGLECLIENTID }}
+          idpRegion: ${{ secrets.IDPREGIONIDPREGION }}
+          rpcServer: ${{ secrets.RPCSERVER }}
+          kmsRegion: ${{ secrets.KMSREGION }}
+          emailRegion: ${{ secrets.EMAILREGION }}
+          keyId: ${{ secrets.KEYID }}
+        run: pnpm run build
       - name: Setup Pages
         uses: actions/setup-node@v2
         with:
