@@ -22,7 +22,7 @@ jobs:
           node-version: "18"
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Build webpack
         env:
