@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {sequence} from '0xsequence'
 import { Spinner, Button, Box, Card, Text, Modal,useTheme, TextInput, GradientAvatar } from '@0xsequence/design-system';
@@ -7,15 +6,12 @@ import {ethers} from 'ethers'
 //@ts-ignore
 import TickerBoard from './TickerBoard'
 //@ts-ignore
-import { Board } from 'ticker-board'
 import SequenceMarketABI from './ISequenceMarket.json'
 import { SequenceIndexer } from '@0xsequence/indexer'
 import { AnimatePresence } from 'framer-motion'
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import 'react-calendar/dist/Calendar.css';
 import 'react-clock/dist/Clock.css';
-import DateTimePicker from 'react-datetime-picker';
-
 import plane1 from './planes/Falcon_Mark_IV_Redtail.png'
 import plane2 from './planes/Hawkwind_P-22_Emerald.png'
 import plane3 from './planes/Lightning_Spectre_G6.png'
@@ -31,7 +27,6 @@ import { config } from "./config"
 const planePanels = [plane1,plane2,plane3,plane4,plane5,plane6]
 
 function BasicDateTimePicker(props: any) {
-  const [value, onChange] = useState<any>(new Date());
   useEffect(() => {
     props.setExpiry(Date.now() + (7 * 24 * 60 * 60 * 1000))
   },[])
@@ -57,8 +52,9 @@ const ColorPanels = (props: any) => {
     props.setSelectedId(id); // Update the selected panel ID
   };
 
+  const selectedId = props.selectedId
   useEffect(() => {
-  }, [props.selectedId])
+  }, [selectedId])
   return (
     <div className="panel-container">
       <div className="grid-container">
@@ -86,7 +82,6 @@ const ColorPanels = (props: any) => {
   );
 };
   
-let flipBoard: any = null
 function App() {
   const {setTheme} = useTheme()
 
@@ -124,7 +119,7 @@ function App() {
     setTimeout(async ()=>{
       console.log(connectors.map(async (connector) => {
         if(await connector.isAuthorized()){
-          if(connector.id == 'sequence'){
+          if(connector.id === 'sequence'){
             console.log('in here')
             setIsSequence(true)
           }
@@ -231,8 +226,6 @@ function App() {
           'acceptRequest', [requestId, 1, address, [],[]]
         )
     
-        const erc20Interface = new ethers.utils.Interface(["function approve(address spender, uint256 amount) public returns (bool)"])
-    
         const dataApprove = erc20Interface.encodeFunctionData(
           'approve', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",Number(price)]
         )
@@ -251,6 +244,7 @@ function App() {
         const signer = wallet.getSigner()
   
         const res = await signer.sendTransaction([txApprove, tx])
+        console.log(res)
         setView(1)
         setIsViewOrderbook(false)
       }else {

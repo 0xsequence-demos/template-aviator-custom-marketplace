@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/static/css/main.0ace0184.css",
-    "main.js": "/static/js/main.5a85373b.js",
+    "main.js": "/static/js/main.2af99fc4.js",
     "static/js/804.5d15a8b8.chunk.js": "/static/js/804.5d15a8b8.chunk.js",
     "static/js/196.871f57fa.chunk.js": "/static/js/196.871f57fa.chunk.js",
     "static/js/860.bfe03c78.chunk.js": "/static/js/860.bfe03c78.chunk.js",
     "static/js/468.9334342c.chunk.js": "/static/js/468.9334342c.chunk.js",
     "static/js/384.1bdee2a1.chunk.js": "/static/js/384.1bdee2a1.chunk.js",
-    "static/js/508.c33ef357.chunk.js": "/static/js/508.c33ef357.chunk.js",
-    "static/js/680.7d48997c.chunk.js": "/static/js/680.7d48997c.chunk.js",
+    "static/js/508.43a5320c.chunk.js": "/static/js/508.43a5320c.chunk.js",
+    "static/js/680.df1efba7.chunk.js": "/static/js/680.df1efba7.chunk.js",
     "static/media/Hawkwind_P-22_Emerald.png": "/static/media/Hawkwind_P-22_Emerald.7d3e1d93e97050d57e92.png",
     "static/media/Thunderbolt_XR-5_Cobalt.png": "/static/media/Thunderbolt_XR-5_Cobalt.81059bbb98993e2d5ca4.png",
     "static/media/Skyraider_Z-11_Onyx.png": "/static/media/Skyraider_Z-11_Onyx.47c52b75dfd3c2fa9f87.png",
@@ -20,15 +20,15 @@
     "static/media/ticker-bg-light.svg": "/static/media/ticker-bg-light.88c1e73bd1457bd6e85d.svg",
     "static/media/ticker-bg.svg": "/static/media/ticker-bg.4a9f459416169888d0e9.svg",
     "main.0ace0184.css.map": "/static/css/main.0ace0184.css.map",
-    "main.5a85373b.js.map": "/static/js/main.5a85373b.js.map",
+    "main.2af99fc4.js.map": "/static/js/main.2af99fc4.js.map",
     "860.bfe03c78.chunk.js.map": "/static/js/860.bfe03c78.chunk.js.map",
     "468.9334342c.chunk.js.map": "/static/js/468.9334342c.chunk.js.map",
     "384.1bdee2a1.chunk.js.map": "/static/js/384.1bdee2a1.chunk.js.map",
-    "508.c33ef357.chunk.js.map": "/static/js/508.c33ef357.chunk.js.map",
-    "680.7d48997c.chunk.js.map": "/static/js/680.7d48997c.chunk.js.map"
+    "508.43a5320c.chunk.js.map": "/static/js/508.43a5320c.chunk.js.map",
+    "680.df1efba7.chunk.js.map": "/static/js/680.df1efba7.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0ace0184.css",
-    "static/js/main.5a85373b.js"
+    "static/js/main.2af99fc4.js"
   ]
 }
