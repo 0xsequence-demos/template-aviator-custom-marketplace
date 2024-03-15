@@ -16,7 +16,7 @@ const appleClientId =  process.env.REACT_APP_appleClientId!;
 
 const connectors = [
   ...getDefaultWaasConnectors({
-    walletConnectProjectId: ENV.walletConnectId,
+    walletConnectProjectId: process.env.REACT_APP_walletConnectProjectId!,
     defaultChainId: 421614,
     waasConfigKey,
     googleClientId,
