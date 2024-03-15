@@ -27,6 +27,8 @@ import { sendTransaction } from '@wagmi/core';
 import { config } from "./config"
 
 const planePanels = [plane1,plane2,plane3,plane4,plane5,plane6]
+
+
 const ColorPanels = (props: any) => {
   // for loading
   const colors = [
@@ -436,6 +438,7 @@ async function postData() {
   const [quantity, setQuantity] = useState(null)
   const [price, setPrice] = useState<number>(0)
   const [expiry, setExpiry] = useState(null)
+  setExpiry(Date.now() + (7 * 24 * 60 * 60 * 1000))
   //@ts-ignore
   const [_,setWalletAddress] = useState<any>(null)
   const [plane,setPlane] = useState<any>(null)
@@ -470,6 +473,7 @@ async function postData() {
       //@ts-ignore
       const val = tokenBalances.balances.map((token) => {
         object[token.tokenID] = 1
+        return
       })
 
       console.log(val)
@@ -519,6 +523,7 @@ async function postData() {
         if(order.tokenId === selectedId){
           listings.push(order)
         }
+        return
       })
       console.log(val)
 
@@ -888,6 +893,8 @@ async function postData() {
                         <br/>
                         Note: The expiry is 7 days
                       </Text> 
+                      <BasicDateTimePicker setExpiry={setExpiry}/>
+                      <br/>
                       <br/>
                       <TextInput  name="" placeholder="quantity" onChange={(value: any) => setQuantity(value.target.value)}/>
                       <br/>
