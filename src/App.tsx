@@ -893,7 +893,6 @@ async function postData() {
                         <br/>
                         Note: The expiry is 7 days
                       </Text> 
-                      <BasicDateTimePicker setExpiry={setExpiry}/>
                       <br/>
                       <br/>
                       <TextInput  name="" placeholder="quantity" onChange={(value: any) => setQuantity(value.target.value)}/>
