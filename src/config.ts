@@ -1,5 +1,5 @@
 import { http } from 'wagmi'
-// import { createConfig} from '@wagmi/core'
+import { createConfig} from '@wagmi/core'
 import { mainnet, arbitrumSepolia } from 'wagmi/chains'
 import { getKitConnectWallets } from '@0xsequence/kit';
 import { getDefaultWaasConnectors } from '@0xsequence/kit-connectors';
