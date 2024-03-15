@@ -1,23 +1,37 @@
 import { createConfig, http, WagmiProvider, WagmiConfig } from 'wagmi'
 // import { createConfig} from '@wagmi/core'
-import { mainnet, polygon, Chain } from 'wagmi/chains'
-import { getDefaultConnectors } from '@0xsequence/kit-connectors'
+import { mainnet, arbitrumSepolia, Chain } from 'wagmi/chains'
+import { KitProvider, getKitConnectWallets } from '@0xsequence/kit';
+import { getDefaultWaasConnectors } from '@0xsequence/kit-connectors';
 
-const chains = [mainnet, polygon] as [Chain, ...Chain[]]
-  
-const projectAccessKey = 'AQAAAAAAAAgNjIRFEAG0m21hy3oLEEKQLpo'
+// const projectAccessKey = 'AQAAAAAAAAgNjIRFEAG0m21hy3oLEEKQLpo'
+const appleRedirectURI = 'http://' + window.location.host
 
-const connectors = getDefaultConnectors({
-  walletConnectProjectId: '645c9423a4429b484eef3d148855b5e4',
-  defaultChainId: 137,
-  appName: 'demo app',
-  projectAccessKey,
-  
-})
+const chains: any = [mainnet, arbitrumSepolia];
+
+const projectAccessKey = process.env.REACT_APP_PROJECTACCESSKEY!;
+const waasConfigKey =  process.env.REACT_APP_waasConfigKey!;
+const googleClientId =  process.env.REACT_APP_googleClientId!;
+const appleClientId =  process.env.REACT_APP_appleClientId!;
+
+const connectors = [
+  ...getDefaultWaasConnectors({
+    walletConnectProjectId: ENV.walletConnectId,
+    defaultChainId: 421614,
+    waasConfigKey,
+    googleClientId,
+    appleClientId,
+    appleRedirectURI,
+    appName: 'demo app',
+    projectAccessKey,
+    enableConfirmationModal: false,
+  }),
+  ...getKitConnectWallets(projectAccessKey, []),
+];
 
 const transports: any = {}
 
-chains.forEach(chain => {
+chains.forEach((chain: any) => {
   transports[chain.id] = http()
 })
 

@@ -23,15 +23,15 @@ function Dapp() {
 
 
   return (
-    <WagmiConfig config={config}>
+    <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}> 
-        <KitProvider config={{defaultTheme: 'light'}}>
+        <KitProvider config={{defaultTheme: 'light', signIn: {showEmailInput: false }}}>
         <ThemeProvider>
           <App />
         </ThemeProvider>
         </KitProvider>
       </QueryClientProvider>
-    </WagmiConfig>
+    </WagmiProvider>
   );
 }
 

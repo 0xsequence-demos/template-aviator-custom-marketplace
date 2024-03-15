@@ -1,0 +1,53 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master # Adjust branch name as needed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build webpack
+        env:
+          projectAccessKey: ${{ secrets.PROJECTACCESSKEY }}
+          waasConfigKey: ${{ secrets.WAASCONFIGKEY }}
+          projectId: ${{ secrets.PROJECTID }}
+          walletConnectId: ${{ secrets.WALLETCONNECTID }}
+          identityPoolId: ${{ secrets.IDENTITYPOOLID }}
+          emailClientId: ${{ secrets.EMAILCLIENTID }}
+          googleClientId: ${{ secrets.GOOGLECLIENTID }}
+          idpRegion: ${{ secrets.IDPREGIONIDPREGION }}
+          rpcServer: ${{ secrets.RPCSERVER }}
+          kmsRegion: ${{ secrets.KMSREGION }}
+          emailRegion: ${{ secrets.EMAILREGION }}
+          keyId: ${{ secrets.KEYID }}
+        run: pnpm run build
+      - name: Setup Pages
+        uses: actions/setup-node@v2
+        with:
+          branch: master
+          folder: build
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: "./build"
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2

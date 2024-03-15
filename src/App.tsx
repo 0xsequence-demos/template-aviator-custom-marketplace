@@ -50,7 +50,6 @@ const ColorPanels = (props: any) => {
     'rgba(0, 128, 0, 0.65)', // green
     'rgba(255, 255, 0, 0.65)', // yellow
     'rgba(0, 0, 255, 0.65)', // blue
-    'rgba(75, 0, 130, 0.65)', // indigo
   ].reverse()
 
   const handlePanelClick = (id: any) => {
@@ -63,23 +62,23 @@ const ColorPanels = (props: any) => {
   return (
     <div className="panel-container">
       <div className="grid-container">
-        {colors.slice(1).map((color, index) => (
+        {colors.map((color, index) => (
           <div
             key={index}
-            className={`color-panel ${props.selectedId === index + 1 ? 'selected' : ''} ${props.selectedId !== null && props.selectedId !== index + 1 ? 'greyed-out' : ''}`}
-            style={{ backgroundImage: props.colored && props.colored.slice(1,props.colored.length)[index] > 0 ? `url(${planePanels[index]})` : '', backgroundColor: props.colored ?  props.colored.slice(1,props.colored.length-1)[index] > 0 ? color : 'grey' : color}}
+            className={`color-panel ${props.selectedId === index ? 'selected' : ''} ${props.selectedId !== null && props.selectedId !== index ? 'greyed-out' : ''}`}
+            style={{ backgroundImage: props.colored && props.colored[index] > 0 ? `url(${planePanels[index]})` : '', backgroundColor: props.colored ?  props.colored[index] > 0 ? color : 'grey' : color}}
             onClick={() => {
 
               if(props.market) {
-                props.setRequestId(props.requests.slice(1,props.requests.length)[index])
-                props.setPrice(props.prices.slice(1,props.prices.length)[index])
+                props.setRequestId(props.requests[index])
+                props.setPrice(props.prices[index])
               }
               props.setPlane && props.setPlane(planePanels[index])
-              if(props.colored&&props.colored.slice(1,props.colored.length)[index] > 0) handlePanelClick(index + 1)
-              else if(!props.colored)  handlePanelClick(index + 1)
+              if(props.colored&&props.colored[index] > 0) handlePanelClick(index)
+              else if(!props.colored)  handlePanelClick(index)
             }}
           >
-            {props.market == true && props.colored &&props.colored.slice(1,props.colored.length)[index] > 0 && props.colored.slice(1,props.colored.length)[index]}
+            {props.market == true && props.colored &&props.colored[index] > 0 && props.colored[index]}
             <span style={{fontSize: '10px'}}>{props.names && props.names[index] && props.names[index][0]}</span></div>
         ))}
       </div>
@@ -103,7 +102,7 @@ function App() {
   const [prices, setPrices] = useState([])
   const { setOpenConnectModal } = useOpenConnectModal()
   const { address, isConnected } = useAccount()
-  const { data: walletClient } = useWalletClient({chainId: 137})
+  const { data: walletClient } = useWalletClient({chainId: 421614})
   const { connectors } = useConnect()
   const [isSequence, setIsSequence] = useState<any>(false)
   const [isMinting, setIsMinting] = useState<any>(false)
@@ -118,7 +117,7 @@ function App() {
     ["Thunderbolt XR-5 Cobalt", "A robust, heavy fighter painted in a deep, vivid cobalt blue."],
      ]
 
-  sequence.initWallet("AQAAAAAAAAfalbPQnQhGI9F68UTWT9RyHlM",{defaultNetwork: 'polygon'})
+  sequence.initWallet("AQAAAAAAAAfalbPQnQhGI9F68UTWT9RyHlM",{defaultNetwork: 'arbitrum-sepolia'})
 
   useEffect(() => {
     // new TickerBoard('.create-ticker')
@@ -132,14 +131,14 @@ function App() {
         }
       }))
 
-      const res = await fetch('https://dev-marketplace-api.sequence.app/polygon/rpc/Marketplace/GetTopOrders', {
+      const res = await fetch('https://dev-marketplace-api.sequence.app/arbitrum-sepolia/rpc/Marketplace/GetTopOrders', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
             "collectionAddress": "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
-            "currencyAddresses": ["0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"],
+            "currencyAddresses": ["0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7"],
             "orderbookContractAddress": "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
             "tokenIDs": [
                 "0",
@@ -148,7 +147,6 @@ function App() {
                 "3",
                 "4",
                 "5",
-                "6",
             ],
             "isListing": true,
             "priceSort": "DESC"
@@ -163,7 +161,6 @@ function App() {
       3: 0,
       4: 0,
       5: 0,
-      6: 0
     }
 
     console.log(result)
@@ -175,7 +172,6 @@ function App() {
       3: 0,
       4: 0,
       5: 0,
-      6: 0
     }
     const prices: any = {
       0: 0,
@@ -184,15 +180,14 @@ function App() {
       3: 0,
       4: 0,
       5: 0,
-      6: 0
     }
     console.log(result.orders)
     result.orders.map(async (order: any) => {
       console.log('in this loop')
       console.log(order)
-      if(Number(order.pricePerToken) / 10**6 >= 0.01){
+      if(Number(order.pricePerToken) / 10**18 >= 0.01){
 
-        object[order.tokenId] = Number(Number(order.pricePerToken) / 10**6).toFixed(2)
+        object[order.tokenId] = Number(Number(order.pricePerToken) / 10**18).toFixed(2)
         // const res = await fetch(`https://metadata.sequence.app/tokens/${'polygon'}/${order.tokenContract}/${order.tokenId}`)
         // const json = await res.json()
         // console.log(json)
@@ -243,7 +238,7 @@ function App() {
         )
   
         const txApprove = {
-          to: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+          to: '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7',
           data: dataApprove
         }
   
@@ -273,7 +268,7 @@ function App() {
   
         try {
           const res1 = await sendTransaction(config, {
-            to: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+            to: "0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7",
             data: dataApprove as `0x${string}`
           })
   
@@ -295,8 +290,10 @@ function App() {
   }
 
   const mint = async () => {
-    const wallet = sequence.getWallet()
-    const signer = wallet.getSigner(137)
+    console.log('minting')
+    console.log(selectedId)
+    // const wallet = sequence.getWallet()
+    // const signer = wallet.getSigner(137)
     // const erc1155Interface = new ethers.utils.Interface(["function mint(address to, uint256 tokenId, uint256 amount, bytes data) returns ()"])
     // console.log(selectedId)
     // const data = erc1155Interface.encodeFunctionData(
@@ -308,6 +305,7 @@ function App() {
     //   data: data
     // }
     // const url = 'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
+    // const url = 'http://localhost:8787';
     const url = 'https://yellow-bonus-97e1.yellow-shadow-d7ff.workers.dev';
     console.log(address)
 const data = {
@@ -355,8 +353,10 @@ async function postData() {
     console.log('testing')
     if(isSequence){
       const wallet = sequence.getWallet()
-      const signer = wallet.getSigner(137)
+      const signer = wallet.getSigner(421614)
 
+	    const amountBigNumber = ethers.utils.parseUnits(String(price), 18); // Convert 1 token to its smallest unit based on 18 decimals
+      console.log(amountBigNumber)
       const request = {
           creator: await wallet.getAddress(),
           isListing: true,
@@ -365,8 +365,8 @@ async function postData() {
           tokenId: selectedId,
           quantity: quantity,
           expiry: expiry,
-          currency: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
-          pricePerToken: Math.floor(Number(price)*10**6)
+          currency: '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7',
+          pricePerToken: amountBigNumber
       }
 
       const data = sequenceMarketInterface.encodeFunctionData(
@@ -397,17 +397,22 @@ async function postData() {
       }
     } else {
 
+	    const amountBigNumber = ethers.utils.parseUnits(String(price), 18); // Convert 1 token to its smallest unit based on 18 decimals
+      console.log('amountBigNumber')
+      console.log(amountBigNumber)
       const request = {
-        creator: walletAddress,
+        creator: address,
         isListing: true,
         isERC1155: true,
         tokenContract: '0x1693ffc74edbb50d6138517fe5cd64fd1c917709',
         tokenId: selectedId,
         quantity: quantity,
         expiry: expiry,
-        currency: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
-        pricePerToken: Math.floor(Number(price)*10**6)
+        currency: '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7',
+        pricePerToken: amountBigNumber.toString()
       }
+
+      console.log(request)
 
       const data = sequenceMarketInterface.encodeFunctionData(
         'createRequest', [request]
@@ -417,15 +422,23 @@ async function postData() {
         'setApprovalForAll', ["0xB537a160472183f2150d42EB1c3DD6684A55f74c",true]
       )
 
+      console.log(dataApprove)
+
       const res1 = await sendTransaction(config, {
         to: "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
-        data: dataApprove as `0x${string}`
+        data: dataApprove as `0x${string}`,
+        gas: null
       })
+      console.log(res1)
 
       const res2 = await sendTransaction(config, {
         to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
-        data: data as `0x${string}`
+        data: data as `0x${string}`,
+        gas: null
       })
+
+      console.log(res2)
+
       setSelectedId(null)
       setView(2)
       toggleModal(false)
@@ -446,7 +459,7 @@ async function postData() {
     setTimeout(async () => {
       if(loggedIn){
 
-      const indexer = new SequenceIndexer('https://polygon-indexer.sequence.app', 'c3bgcU3LkFR9Bp9jFssLenPAAAAAAAAAA')
+      const indexer = new SequenceIndexer('https://arbitrum-sepolia-indexer.sequence.app', 'c3bgcU3LkFR9Bp9jFssLenPAAAAAAAAAA')
 
       const accountAddress = address
       
@@ -463,7 +476,6 @@ async function postData() {
         3: 0,
         4: 0,
         5: 0,
-        6: 0
       }
 
       tokenBalances.balances.map((token) => {
@@ -474,7 +486,11 @@ async function postData() {
     }
 
     }, 0)
-  }, [view])
+  }, [view, isConnected])
+
+  useEffect(() => {
+
+  }, [balance])
 
   const [orderbookListings, setOrderbookListings] = useState([])
 
@@ -486,14 +502,14 @@ async function postData() {
   useEffect(() => {
     setTimeout(async () => {
       if(isViewOrderbook){
-        const res = await fetch('https://dev-marketplace-api.sequence.app/polygon/rpc/Marketplace/GetOrderbookOrders', {
+        const res = await fetch('https://dev-marketplace-api.sequence.app/arbitrum-sepolia/rpc/Marketplace/GetOrderbookOrders', {
           method: 'POST',
           headers: {
               'Content-Type': 'application/json'
           },
           body: JSON.stringify({
               "collectionAddress": "0x1693ffc74edbb50d6138517fe5cd64fd1c917709",
-              "currencyAddresses": ["0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359"],
+              "currencyAddresses": ["0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7"],
               "orderbookContractAddress": "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
               "tokenIDs": [selectedId
               ],
@@ -540,7 +556,7 @@ async function postData() {
       )
 
       const txApprove = {
-        to: '0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359',
+        to: '0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7',
         data: dataApprove
       }
 
@@ -570,14 +586,14 @@ async function postData() {
 
       try {
         const res1 = await sendTransaction(config, {
-          to: "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
+          to: "0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7",
           data: dataApprove as `0x${string}`
         })
 
-        const res2 = await sendTransaction(config, {
-          to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
-          data: data as `0x${string}`
-        })
+        // const res2 = await sendTransaction(config, {
+        //   to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
+        //   data: data as `0x${string}`
+        // })
         setView(2)
         setIsViewOrderbook(false)
       }
@@ -686,7 +702,7 @@ async function postData() {
           <>
           <br/>
           {isConnected && <div style={{position: 'fixed', top: '20px', right: '30px'}}>
-            <span onClick={() => {setLoggedIn(false);disconnect(); setIsSequence(false)}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', display: 'inline-block'}}>sign out</span>
+            <span onClick={() => {setView(0);setLoggedIn(false);disconnect(); setIsSequence(false)}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', display: 'inline-block'}}>sign out</span>
           </div>}
           {/* <span onClick={() => {setView(-1);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view == -1 ? '1' : '0'}px solid black`, display: 'inline-block'}}>faucet</span> */}
           &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(0);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view == 0 ? '1' : '0'}px solid black`, display: 'inline-block'}}>mint</span>
@@ -706,9 +722,9 @@ async function postData() {
             </div>
                 <p style={{color: 'black', fontFamily: 'circular'}}>✈️ choose your plane color</p>
                 <Box justifyContent={'center'}>
-                  <ColorPanels names={metadata} colored={[1,1,1,1,1,1,1,1]}setSelectedId={setSelectedId} selectedId={selectedId}/>
+                  <ColorPanels names={metadata} colored={[1,1,1,1,1,1,1]}setSelectedId={setSelectedId} selectedId={selectedId}/>
                 </Box> 
-                <p style={{fontFamily: 'circular'}}>{selectedId && metadata[selectedId!-1][1]}</p>
+                <p style={{fontFamily: 'circular'}}>{selectedId && metadata[selectedId!][1]}</p>
                 <br/>
                 {!isMinting ? <Box justifyContent={'center'}>
                   <Button disabled={selectedId == null} padding={"4"} label="mint" onClick={() => mint()}></Button>
@@ -752,9 +768,10 @@ async function postData() {
                         justifyContent: 'center',   // Center items vertically
                       }}
                       onClick={() => {
+                        console.log(order)
                         setRequestId(order.orderId);
                         setPrice(order.pricePerToken);
-                        setPlane(planePanels[selectedId!-1]);
+                        setPlane(planePanels[selectedId!]);
                         setWalletAddress(order.creatorAddress);
                         handleCardId(index);
                       }}
@@ -763,7 +780,7 @@ async function postData() {
                       <span> {order.createdBy}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       <span>orderId: {order.orderId}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                       <span>tokenId: {order.tokenId}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                      <span>${Number(order.pricePerToken) / 10**6}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                      <span>${Number(order.pricePerToken) / 10**18}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     </Card>
                     
                     })}
@@ -867,7 +884,7 @@ async function postData() {
                     <Box marginTop="5" marginBottom="4">
                       <br/>
                       <Text variant="normal" color="text80">
-                        Enter your listing in USDC
+                        Enter your listing in ꩜
                         <br/>
                         <br/>
                         Note: The expiry is 7 days
