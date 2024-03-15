@@ -15,30 +15,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3 # docs https://pnpm.io/continuous-integration#github-actions
-        with:
-          version: 8
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build webpack
-        env:
-          projectAccessKey: ${{ secrets.PROJECTACCESSKEY }}
-          waasConfigKey: ${{ secrets.WAASCONFIGKEY }}
-          projectId: ${{ secrets.PROJECTID }}
-          walletConnectId: ${{ secrets.WALLETCONNECTID }}
-          identityPoolId: ${{ secrets.IDENTITYPOOLID }}
-          emailClientId: ${{ secrets.EMAILCLIENTID }}
-          googleClientId: ${{ secrets.GOOGLECLIENTID }}
-          idpRegion: ${{ secrets.IDPREGIONIDPREGION }}
-          rpcServer: ${{ secrets.RPCSERVER }}
-          kmsRegion: ${{ secrets.KMSREGION }}
-          emailRegion: ${{ secrets.EMAILREGION }}
-          keyId: ${{ secrets.KEYID }}
-        run: pnpm run build
       - name: Setup Pages
         uses: actions/setup-node@v2
         with:

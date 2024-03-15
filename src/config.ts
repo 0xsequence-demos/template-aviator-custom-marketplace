@@ -1,12 +1,13 @@
+import { http } from 'wagmi'
 // import { createConfig} from '@wagmi/core'
-import { arbitrumSepolia } from 'wagmi/chains'
+import { mainnet, arbitrumSepolia } from 'wagmi/chains'
 import { getKitConnectWallets } from '@0xsequence/kit';
 import { getDefaultWaasConnectors } from '@0xsequence/kit-connectors';
 
 // const projectAccessKey = 'AQAAAAAAAAgNjIRFEAG0m21hy3oLEEKQLpo'
 const appleRedirectURI = 'http://' + window.location.host
 
-const chains: any = [arbitrumSepolia];
+const chains: any = [mainnet, arbitrumSepolia];
 
 const projectAccessKey = process.env.REACT_APP_PROJECTACCESSKEY!;
 const waasConfigKey =  process.env.REACT_APP_waasConfigKey!;
