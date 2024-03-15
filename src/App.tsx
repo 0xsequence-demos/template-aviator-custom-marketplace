@@ -119,6 +119,7 @@ function App() {
   useEffect(() => {
     // new TickerBoard('.create-ticker')
     setTimeout(async ()=>{
+      //@ts-ignore
       console.log(connectors.map(async (connector) => {
         if(await connector.isAuthorized()){
           if(connector.id === 'sequence'){
@@ -203,7 +204,6 @@ function App() {
 
   useEffect(() => {
     if(isConnected) setLoggedIn(true)
-    if(isConnected)console.log(walletClient)
     console.log(sequence.getWallet())
   }, [isConnected])
   const connect = async () => {
@@ -263,11 +263,13 @@ function App() {
         )
   
         try {
+          //@ts-ignore
           const res1 = await sendTransaction(config, {
             to: "0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7",
             data: dataApprove as `0x${string}`
           })
   
+          //@ts-ignore
           const res2 = await sendTransaction(config, {
             to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
             data: data as `0x${string}`
@@ -384,6 +386,7 @@ async function postData() {
       }
 
       try {
+        //@ts-ignore
         const res = await signer.sendTransaction([txApprove,tx])
         toggleModal(false)
         setSelectedId(null)
@@ -441,22 +444,23 @@ async function postData() {
     }
   }
 
-  const aircraftNames = ['AVIATOR', "HANGAR"];
   const [balance, setBalance] = useState({})
   const [quantity, setQuantity] = useState(null)
   const [price, setPrice] = useState<number>(0)
   const [expiry, setExpiry] = useState(null)
-  const [walletAddress,setWalletAddress] = useState<any>(null)
+  const [_,setWalletAddress] = useState<any>(null)
   const [plane,setPlane] = useState<any>(null)
   const {disconnect} = useDisconnect()
 
   useEffect(() => {
 
     setTimeout(async () => {
+      //@ts-ignore
       if(loggedIn){
 
       const indexer = new SequenceIndexer('https://arbitrum-sepolia-indexer.sequence.app', 'c3bgcU3LkFR9Bp9jFssLenPAAAAAAAAAA')
 
+      //@ts-ignore
       const accountAddress = address
       
       const tokenBalances = await indexer.getTokenBalances({
@@ -516,8 +520,10 @@ async function postData() {
       const result = await res.json()
 
       const listings: any = []
+      //@ts-ignore
       result.orders.map((order: any) => {
-        if(order.tokenId == selectedId){
+        //@ts-ignore
+        if(order.tokenId === selectedId){
           listings.push(order)
         }
       })
@@ -531,7 +537,7 @@ async function postData() {
 
   const handleCardId = async (id: any) => {
     console.log(id)
-    if(id == cardId) setCardId(null)
+    if(id === cardId) setCardId(null)
     else setCardId(id)
   }
 
@@ -570,6 +576,7 @@ async function postData() {
     }else {
 // const wallet = await sequence.getWallet()
     // const signer = await wallet.getSigner(137)
+      //@ts-ignore
       const data = sequenceMarketInterface.encodeFunctionData(
         'acceptRequest', [requestId, 1, address, [],[]]
       )
@@ -581,6 +588,7 @@ async function postData() {
       )
 
       try {
+        //@ts-ignore
         const res1 = await sendTransaction(config, {
           to: "0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7",
           data: dataApprove as `0x${string}`
@@ -676,6 +684,7 @@ async function postData() {
           console.error('Error:', error);
           setIsMinting(false)
           setCoinTickerBoard(<TickerBoard
+            //@ts-ignore
             messages={['꩜'+'Error']}
             count={1}
             size={5}
@@ -701,11 +710,11 @@ async function postData() {
             <span onClick={() => {setView(0);setLoggedIn(false);disconnect(); setIsSequence(false)}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', display: 'inline-block'}}>sign out</span>
           </div>}
           {/* <span onClick={() => {setView(-1);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view == -1 ? '1' : '0'}px solid black`, display: 'inline-block'}}>faucet</span> */}
-          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(0);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view == 0 ? '1' : '0'}px solid black`, display: 'inline-block'}}>mint</span>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(1);setSelectedId(null);viewOrderbook(true);}} style={{fontFamily: 'circular', cursor: 'pointer', color: 'black', paddingBottom: '5px', borderBottom: `${view == 1 ? '1' : '0'}px solid black`, display: 'inline-block'}}>market</span>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(2);setSelectedId(null);}} style={{fontFamily: 'circular', cursor: 'pointer', color: 'black', paddingBottom: '5px', borderBottom: `${view == 2 ? '1' : '0'}px solid black`, display: 'inline-block'}}>sell</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(0);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view === 0 ? '1' : '0'}px solid black`, display: 'inline-block'}}>mint</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(1);setSelectedId(null);viewOrderbook(true);}} style={{fontFamily: 'circular', cursor: 'pointer', color: 'black', paddingBottom: '5px', borderBottom: `${view === 1 ? '1' : '0'}px solid black`, display: 'inline-block'}}>market</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(2);setSelectedId(null);}} style={{fontFamily: 'circular', cursor: 'pointer', color: 'black', paddingBottom: '5px', borderBottom: `${view === 2 ? '1' : '0'}px solid black`, display: 'inline-block'}}>sell</span>
           {
-              view == 0 
+              view === 0 
             ?
               <>
             <div className="parent">
@@ -727,7 +736,7 @@ async function postData() {
                 </Box> :  <Box justifyContent={'center'}><Spinner/></Box>}
               </>
             :
-              view == 1 
+              view === 1 
             ? 
               <>
               <div className="parent">
@@ -795,7 +804,7 @@ async function postData() {
                 </div>
               </>
             :
-              view == 2 
+              view === 2 
               ? 
               <>
                 <div className="parent">

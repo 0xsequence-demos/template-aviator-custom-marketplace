@@ -9,9 +9,8 @@ import {ThemeProvider} from '@0xsequence/design-system'
 import '@0xsequence/design-system/styles.css'
 import { KitProvider } from '@0xsequence/kit'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { createConfig, http, WagmiProvider, WagmiConfig } from 'wagmi'
+import {WagmiProvider } from 'wagmi'
 // import { createConfig} from '@wagmi/core'
-import { mainnet, polygon, Chain } from 'wagmi/chains'
 
 import {config} from './config'
 
