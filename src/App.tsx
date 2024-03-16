@@ -6,7 +6,7 @@ import {sequence} from '0xsequence'
 import { Spinner, Button, Box, Card, Text, Modal,useTheme, TextInput, GradientAvatar } from '@0xsequence/design-system';
 import {ethers} from 'ethers'
 //@ts-ignore
-import TickerBoard from './TickerBoard'
+import { TickerBoard } from 'react-ticker-board'
 //@ts-ignore
 import SequenceMarketABI from './ISequenceMarket.json'
 import { SequenceIndexer } from '@0xsequence/indexer'
@@ -108,6 +108,8 @@ function App() {
 
   useEffect(() => {
     // new TickerBoard('.create-ticker')
+  })
+  useEffect(() => {
     setTimeout(async ()=>{
       //@ts-ignore
       console.log(connectors.map(async (connector) => {
@@ -438,12 +440,11 @@ async function postData() {
   const [quantity, setQuantity] = useState(null)
   const [price, setPrice] = useState<number>(0)
   const [expiry, setExpiry] = useState(null)
-  setExpiry(Date.now() + (7 * 24 * 60 * 60 * 1000))
   //@ts-ignore
   const [_,setWalletAddress] = useState<any>(null)
   const [plane,setPlane] = useState<any>(null)
   const {disconnect} = useDisconnect()
-  console.log(_)
+  // console.log(_)
   useEffect(() => {
 
     setTimeout(async () => {
@@ -485,7 +486,7 @@ async function postData() {
   }, [view, isConnected])
 
   useEffect(() => {
-
+    setExpiry(Date.now() + (7 * 24 * 60 * 60 * 1000))
   }, [balance])
 
   const [orderbookListings, setOrderbookListings] = useState([])
@@ -607,7 +608,12 @@ async function postData() {
   }
 
 
-  const [coinTickerBoard, setCoinTickerBoard] = useState<any>(null)
+  const [tickerBoard, setTickerBoard] = useState<any>(<TickerBoard
+    messages={['MINT']}
+    count={1}
+    size={6}
+    theme={'dark'}
+  />)
   async function generateNumber() {
     // List of Ethereum network URLs
     const networkUrls = [
@@ -669,22 +675,24 @@ async function postData() {
 
           console.log(response);
           setIsMinting(false)
-          setCoinTickerBoard(<TickerBoard
-            messages={['꩜'+String(number)]}
-            count={1}
-            size={5}
-            theme={'dark'}
-          />)
+
+          // setCoinTickerBoard(<TickerBoard
+          //   messages={['꩜'+String(number)]}
+          //   count={1}
+          //   size={5}
+          //   theme={'dark'}
+          // />)
+
         } catch (error) {
           console.error('Error:', error);
           setIsMinting(false)
-          setCoinTickerBoard(<TickerBoard
-            //@ts-ignore
-            messages={['꩜']}
-            count={1}
-            size={5}
-            theme={'dark'}
-          />)
+          // setCoinTickerBoard(<TickerBoard
+          //   //@ts-ignore
+          //   messages={['꩜']}
+          //   count={1}
+          //   size={5}
+          //   theme={'dark'}
+          // />)
         }
 
   }catch(err){
@@ -694,7 +702,7 @@ async function postData() {
 
   useEffect(() => {
 
-  }, [cardId, coinTickerBoard])
+  }, [cardId])
   return (
     <div className="App">
       {
@@ -705,21 +713,52 @@ async function postData() {
             <span onClick={() => {setView(0);setLoggedIn(false);disconnect(); setIsSequence(false)}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', display: 'inline-block'}}>sign out</span>
           </div>}
           {/* <span onClick={() => {setView(-1);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view == -1 ? '1' : '0'}px solid black`, display: 'inline-block'}}>faucet</span> */}
-          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(0);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view === 0 ? '1' : '0'}px solid black`, display: 'inline-block'}}>mint</span>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(1);setSelectedId(null);viewOrderbook(true);}} style={{fontFamily: 'circular', cursor: 'pointer', color: 'black', paddingBottom: '5px', borderBottom: `${view === 1 ? '1' : '0'}px solid black`, display: 'inline-block'}}>market</span>
-          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {setView(2);setSelectedId(null);}} style={{fontFamily: 'circular', cursor: 'pointer', color: 'black', paddingBottom: '5px', borderBottom: `${view === 2 ? '1' : '0'}px solid black`, display: 'inline-block'}}>sell</span>
-          {
+          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {
+            // const board = new Board(document.getElementById('ticker'), {count: 1, size: 4, delay: 20});
+            // board.updateMessages(['MINT']);
+            setTickerBoard(<TickerBoard
+              messages={['MINT']}
+              count={1}
+              size={6}
+              theme={'dark'}
+            />)
+            setView(0);setSelectedId(null);}} style={{cursor: 'pointer', fontFamily: 'circular', color: 'black', paddingBottom: '5px', borderBottom: `${view === 0 ? '1' : '0'}px solid black`, display: 'inline-block'}}>mint</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {
+
+setTickerBoard(<TickerBoard
+              messages={['MARKET']}
+              count={1}
+              size={6}
+              theme={'dark'}
+            />)
+setView(1);setSelectedId(null);viewOrderbook(true);}} style={{fontFamily: 'circular', cursor: 'pointer', color: 'black', paddingBottom: '5px', borderBottom: `${view === 1 ? '1' : '0'}px solid black`, display: 'inline-block'}}>market</span>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span onClick={() => {
+            setTickerBoard(<TickerBoard
+              messages={['SELL']}
+              count={1}
+              size={4}
+              theme={'dark'}
+            />)
+            setView(2);setSelectedId(null);}} style={{fontFamily: 'circular', cursor: 'pointer', color: 'black', paddingBottom: '5px', borderBottom: `${view === 2 ? '1' : '0'}px solid black`, display: 'inline-block'}}>sell</span>
+          <div className="parent">
+            {tickerBoard}
+            {/* <ul class="create-ticker" id='ticker'>
+                <li>MINT</li>
+            </ul> */}
+            </div>
+            {
               view === 0 
             ?
               <>
-            <div className="parent">
-              <TickerBoard
+            
+            
+              {/* <TickerBoard
                 messages={['MINT']}
                 count={1}
                 size={6}
                 theme={'dark'}
-              />
-            </div>
+              /> */}
+            
                 <p style={{color: 'black', fontFamily: 'circular'}}>✈️ choose your plane color</p>
                 <Box justifyContent={'center'}>
                   <ColorPanels names={metadata} colored={[1,1,1,1,1,1,1]}setSelectedId={setSelectedId} selectedId={selectedId}/>
@@ -734,14 +773,6 @@ async function postData() {
               view === 1 
             ? 
               <>
-              <div className="parent">
-              <TickerBoard
-                  messages={['MARKET']}
-                  count={1}
-                  size={6}
-                  theme={'dark'}
-                />
-              </div>
               {
                 !isViewOrderbook ? 
                 <p style={{color: 'black', fontFamily: 'circular'}}>✈️ request the top order</p>
@@ -802,14 +833,6 @@ async function postData() {
               view === 2 
               ? 
               <>
-                <div className="parent">
-                <TickerBoard
-                    messages={['SELL']}
-                    count={1}
-                    size={6}
-                    theme={'dark'}
-                  />
-                </div>
                 <p style={{color: 'black', fontFamily: 'circular'}}>✈️ sell your plane</p>
                 <Box justifyContent={'center'}>
                   <ColorPanels colored={Object.values(balance)} setSelectedId={setSelectedId} selectedId={selectedId}/>
@@ -829,13 +852,13 @@ async function postData() {
               <br/>
 
                 <div className="parent">
-                <TickerBoard
+                {/* <TickerBoard
                     messages={['FAUCET']}
                     count={1}
                     size={6}
                     theme={'dark'}
-                  />
-                  {coinTickerBoard}
+                  /> */}
+                  {/* {coinTickerBoard} */}
                 </div>
                 <br/>
                 <br/>
