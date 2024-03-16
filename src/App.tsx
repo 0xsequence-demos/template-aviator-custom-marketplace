@@ -441,7 +441,6 @@ async function postData() {
   const [price, setPrice] = useState<number>(0)
   const [expiry, setExpiry] = useState(null)
   //@ts-ignore
-  const [_,setWalletAddress] = useState<any>(null)
   const [plane,setPlane] = useState<any>(null)
   const {disconnect} = useDisconnect()
   // console.log(_)
@@ -803,7 +802,6 @@ setView(1);setSelectedId(null);viewOrderbook(true);}} style={{fontFamily: 'circu
                         setRequestId(order.orderId);
                         setPrice(order.pricePerToken);
                         setPlane(planePanels[selectedId!]);
-                        setWalletAddress(order.creatorAddress);
                         handleCardId(index);
                       }}
                     >
