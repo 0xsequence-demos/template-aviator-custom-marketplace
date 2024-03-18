@@ -11,14 +11,16 @@ const appleRedirectURI = 'http://' + window.location.host
 
 const chains: any = [mainnet, arbitrumSepolia];
 
+console.log(process.env)
+
 const projectAccessKey = process.env.REACT_APP_PROJECTACCESSKEY!;
-const waasConfigKey =  process.env.REACT_APP_waasConfigKey!;
-const googleClientId =  process.env.REACT_APP_googleClientId!;
-const appleClientId =  process.env.REACT_APP_appleClientId!;
+const waasConfigKey =  process.env.REACT_APP_WAASCONFIGKEY!;
+const googleClientId =  process.env.REACT_APP_GOOGLECLIENTID!;
+const appleClientId =  process.env.REACT_APP_APPLECLIENTID!;
 
 const connectors = [
   ...getDefaultWaasConnectors({
-    walletConnectProjectId: process.env.REACT_APP_walletConnectProjectId!,
+    walletConnectProjectId: process.env.REACT_APP_WALLETCONNECTPROJECTID!,
     defaultChainId: 421614,
     waasConfigKey,
     googleClientId,
