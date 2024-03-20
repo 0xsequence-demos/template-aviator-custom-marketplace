@@ -1778,18 +1778,10 @@
     "absolutePath": "src/SequenceMarket.sol",
     "id": 41166,
     "exportedSymbols": {
-      "ISequenceMarket": [
-        41165
-      ],
-      "ISequenceMarketFunctions": [
-        41054
-      ],
-      "ISequenceMarketSignals": [
-        41160
-      ],
-      "ISequenceMarketStorage": [
-        40919
-      ]
+      "ISequenceMarket": [41165],
+      "ISequenceMarketFunctions": [41054],
+      "ISequenceMarketSignals": [41160],
+      "ISequenceMarketStorage": [40919]
     },
     "nodeType": "SourceUnit",
     "src": "1:8414:17",
@@ -2382,9 +2374,7 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": true,
-        "linearizedBaseContracts": [
-          40919
-        ],
+        "linearizedBaseContracts": [40919],
         "name": "ISequenceMarketStorage",
         "nameLocation": "11:22:17",
         "scope": 41166,
@@ -2438,9 +2428,7 @@
                     "pathNode": {
                       "id": 40923,
                       "name": "RequestParams",
-                      "nameLocations": [
-                        "2417:13:17"
-                      ],
+                      "nameLocations": ["2417:13:17"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 40892,
                       "src": "2417:13:17"
@@ -2539,9 +2527,7 @@
                       "pathNode": {
                         "id": 40932,
                         "name": "RequestParams",
-                        "nameLocations": [
-                          "2646:13:17"
-                        ],
+                        "nameLocations": ["2646:13:17"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 40892,
                         "src": "2646:13:17"
@@ -3230,9 +3216,7 @@
                     "pathNode": {
                       "id": 40994,
                       "name": "Request",
-                      "nameLocations": [
-                        "4366:7:17"
-                      ],
+                      "nameLocations": ["4366:7:17"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 40912,
                       "src": "4366:7:17"
@@ -3340,9 +3324,7 @@
                       "pathNode": {
                         "id": 41004,
                         "name": "Request",
-                        "nameLocations": [
-                          "4589:7:17"
-                        ],
+                        "nameLocations": ["4589:7:17"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 40912,
                         "src": "4589:7:17"
@@ -3502,9 +3484,7 @@
                     "pathNode": {
                       "id": 41018,
                       "name": "Request",
-                      "nameLocations": [
-                        "5151:7:17"
-                      ],
+                      "nameLocations": ["5151:7:17"],
                       "nodeType": "IdentifierPath",
                       "referencedDeclaration": 40912,
                       "src": "5151:7:17"
@@ -3684,9 +3664,7 @@
                       "pathNode": {
                         "id": 41034,
                         "name": "Request",
-                        "nameLocations": [
-                          "5783:7:17"
-                        ],
+                        "nameLocations": ["5783:7:17"],
                         "nodeType": "IdentifierPath",
                         "referencedDeclaration": 40912,
                         "src": "5783:7:17"
@@ -3896,9 +3874,7 @@
             "baseName": {
               "id": 40920,
               "name": "ISequenceMarketStorage",
-              "nameLocations": [
-                "2097:22:17"
-              ],
+              "nameLocations": ["2097:22:17"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 40919,
               "src": "2097:22:17"
@@ -3912,10 +3888,7 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "linearizedBaseContracts": [
-          41054,
-          40919
-        ],
+        "linearizedBaseContracts": [41054, 40919],
         "name": "ISequenceMarketFunctions",
         "nameLocation": "2069:24:17",
         "scope": 41166,
@@ -5105,31 +5078,15 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": true,
-        "linearizedBaseContracts": [
-          41160
-        ],
+        "linearizedBaseContracts": [41160],
         "name": "ISequenceMarketSignals",
         "nameLocation": "6337:22:17",
         "scope": 41166,
         "usedErrors": [
-          41113,
-          41124,
-          41127,
-          41136,
-          41141,
-          41144,
-          41147,
-          41150,
-          41153,
-          41156,
+          41113, 41124, 41127, 41136, 41141, 41144, 41147, 41150, 41153, 41156,
           41159
         ],
-        "usedEvents": [
-          41075,
-          41090,
-          41097,
-          41106
-        ]
+        "usedEvents": [41075, 41090, 41097, 41106]
       },
       {
         "id": 41165,
@@ -5142,9 +5099,7 @@
             "baseName": {
               "id": 41161,
               "name": "ISequenceMarketFunctions",
-              "nameLocations": [
-                "8364:24:17"
-              ],
+              "nameLocations": ["8364:24:17"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 41054,
               "src": "8364:24:17"
@@ -5157,9 +5112,7 @@
             "baseName": {
               "id": 41163,
               "name": "ISequenceMarketSignals",
-              "nameLocations": [
-                "8390:22:17"
-              ],
+              "nameLocations": ["8390:22:17"],
               "nodeType": "IdentifierPath",
               "referencedDeclaration": 41160,
               "src": "8390:22:17"
@@ -5173,34 +5126,15 @@
         "contractDependencies": [],
         "contractKind": "interface",
         "fullyImplemented": false,
-        "linearizedBaseContracts": [
-          41165,
-          41160,
-          41054,
-          40919
-        ],
+        "linearizedBaseContracts": [41165, 41160, 41054, 40919],
         "name": "ISequenceMarket",
         "nameLocation": "8345:15:17",
         "scope": 41166,
         "usedErrors": [
-          41113,
-          41124,
-          41127,
-          41136,
-          41141,
-          41144,
-          41147,
-          41150,
-          41153,
-          41156,
+          41113, 41124, 41127, 41136, 41141, 41144, 41147, 41150, 41153, 41156,
           41159
         ],
-        "usedEvents": [
-          41075,
-          41090,
-          41097,
-          41106
-        ]
+        "usedEvents": [41075, 41090, 41097, 41106]
       }
     ]
   },

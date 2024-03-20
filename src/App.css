@@ -1,6 +1,6 @@
 .App {
   text-align: center;
-  background-image: url('./sky_blue_clouds.png');
+  background-image: url("./sky_blue_clouds.png");
   background-repeat: no-repeat;
   background-size: cover;
   height: 100vmin;
@@ -92,11 +92,11 @@
   transition: box-shadow 0.3s ease;
   display: flex;
   background-size: contain;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: white;
-      font-size: 50px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  font-size: 50px;
 }
 
 .selected {
