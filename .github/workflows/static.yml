@@ -28,7 +28,7 @@ jobs:
 
       - name: Build webpack
         env:
-          projectAccessKeyImprovised: ${{ secrets.REACT_APP_PROJECTACCESSKEY }}
+          REACT_APP_PROJECTACCESSKEY: ${{ secrets.REACT_APP_PROJECTACCESSKEY }}
           projectAccessKey: ${{ secrets.PROJECTACCESSKEY }}
           waasConfigKey: ${{ secrets.WAASCONFIGKEY }}
           projectId: ${{ secrets.PROJECTID }}
