@@ -29,18 +29,10 @@ jobs:
       - name: Build webpack
         env:
           REACT_APP_PROJECTACCESSKEY: ${{ secrets.REACT_APP_PROJECTACCESSKEY }}
-          projectAccessKey: ${{ secrets.PROJECTACCESSKEY }}
-          waasConfigKey: ${{ secrets.WAASCONFIGKEY }}
-          projectId: ${{ secrets.PROJECTID }}
-          walletConnectId: ${{ secrets.WALLETCONNECTID }}
-          identityPoolId: ${{ secrets.IDENTITYPOOLID }}
-          emailClientId: ${{ secrets.EMAILCLIENTID }}
-          googleClientId: ${{ secrets.GOOGLECLIENTID }}
-          idpRegion: ${{ secrets.IDPREGIONIDPREGION }}
-          rpcServer: ${{ secrets.RPCSERVER }}
-          kmsRegion: ${{ secrets.KMSREGION }}
-          emailRegion: ${{ secrets.EMAILREGION }}
-          keyId: ${{ secrets.KEYID }}
+          REACT_APP_WAASCONFIGKEY: ${{ secrets.REACT_APP_WAASCONFIGKEY }}
+          REACT_APP_WALLETCONNECTID: ${{ secrets.REACT_APP_WALLETCONNECTID }}
+          REACT_APP_GOOGLECLIENTID: ${{ secrets.REACT_APP_GOOGLECLIENTID }}
+          REACT_APP_APPLECLIENTID: ${{ secrets.REACT_APP_APPLECLIENTID }}
         run: pnpm run build
       - name: Setup Pages
         uses: actions/setup-node@v2
