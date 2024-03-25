@@ -249,9 +249,11 @@ function App() {
           [requestId, 1, address, [], []],
         );
 
+        const amountBigNumber = ethers.utils.parseUnits(String(price), 18); // Convert 1 token to its smallest unit based on 18 decimals
+
         const dataApprove = erc20Interface.encodeFunctionData("approve", [
           "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
-          Number(price),
+          amountBigNumber,
         ]);
 
         const txApprove = {
@@ -281,19 +283,19 @@ function App() {
           "function approve(address spender, uint256 amount) public returns (bool)",
         ]);
 
+        const amountBigNumber = ethers.utils.parseUnits(String(price), 18); // Convert 1 token to its smallest unit based on 18 decimals
+
         const dataApprove = erc20Interface.encodeFunctionData("approve", [
           "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
-          Number(price),
+          amountBigNumber,
         ]);
 
         try {
-          //@ts-ignore
           await sendTransaction(config, {
             to: "0xa9c88358862211870db6f18bc9b3f6e4f8b3eae7",
             data: dataApprove as `0x${string}`,
           });
 
-          //@ts-ignore
           await sendTransaction(config, {
             to: "0xB537a160472183f2150d42EB1c3DD6684A55f74c",
             data: data as `0x${string}`,
@@ -625,6 +627,7 @@ function App() {
 
   return (
     <div className="App">
+
       {loggedIn ? (
         <>
           <br />
