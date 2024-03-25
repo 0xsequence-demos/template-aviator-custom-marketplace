@@ -1,0 +1,34 @@
+{
+  "files": {
+    "main.css": "/aviator-custom-marketplace/static/css/main.07b17561.css",
+    "main.js": "/aviator-custom-marketplace/static/js/main.0c809a10.js",
+    "static/js/804.5d15a8b8.chunk.js": "/aviator-custom-marketplace/static/js/804.5d15a8b8.chunk.js",
+    "static/js/196.871f57fa.chunk.js": "/aviator-custom-marketplace/static/js/196.871f57fa.chunk.js",
+    "static/js/860.bfe03c78.chunk.js": "/aviator-custom-marketplace/static/js/860.bfe03c78.chunk.js",
+    "static/js/468.9334342c.chunk.js": "/aviator-custom-marketplace/static/js/468.9334342c.chunk.js",
+    "static/js/384.1bdee2a1.chunk.js": "/aviator-custom-marketplace/static/js/384.1bdee2a1.chunk.js",
+    "static/js/508.48d828c6.chunk.js": "/aviator-custom-marketplace/static/js/508.48d828c6.chunk.js",
+    "static/js/680.938aae9c.chunk.js": "/aviator-custom-marketplace/static/js/680.938aae9c.chunk.js",
+    "static/media/Hawkwind_P-22_Emerald.png": "/aviator-custom-marketplace/static/media/Hawkwind_P-22_Emerald.7d3e1d93e97050d57e92.png",
+    "static/media/Thunderbolt_XR-5_Cobalt.png": "/aviator-custom-marketplace/static/media/Thunderbolt_XR-5_Cobalt.81059bbb98993e2d5ca4.png",
+    "static/media/Skyraider_Z-11_Onyx.png": "/aviator-custom-marketplace/static/media/Skyraider_Z-11_Onyx.47c52b75dfd3c2fa9f87.png",
+    "static/media/Raptor_Fury_X2.png": "/aviator-custom-marketplace/static/media/Raptor_Fury_X2.634f72ce2cb3cd06f2a1.png",
+    "static/media/Falcon_Mark_IV_Redtail.png": "/aviator-custom-marketplace/static/media/Falcon_Mark_IV_Redtail.df867b402ab2c4ec5d83.png",
+    "static/media/Lightning_Spectre_G6.png": "/aviator-custom-marketplace/static/media/Lightning_Spectre_G6.a0488bf580332c76eb71.png",
+    "static/media/sky_blue_clouds.png": "/aviator-custom-marketplace/static/media/sky_blue_clouds.c7633123bb65b0ea1440.png",
+    "index.html": "/aviator-custom-marketplace/index.html",
+    "static/media/ticker-bg-light.svg": "/aviator-custom-marketplace/static/media/ticker-bg-light.88c1e73bd1457bd6e85d.svg",
+    "static/media/ticker-bg.svg": "/aviator-custom-marketplace/static/media/ticker-bg.4a9f459416169888d0e9.svg",
+    "main.07b17561.css.map": "/aviator-custom-marketplace/static/css/main.07b17561.css.map",
+    "main.0c809a10.js.map": "/aviator-custom-marketplace/static/js/main.0c809a10.js.map",
+    "860.bfe03c78.chunk.js.map": "/aviator-custom-marketplace/static/js/860.bfe03c78.chunk.js.map",
+    "468.9334342c.chunk.js.map": "/aviator-custom-marketplace/static/js/468.9334342c.chunk.js.map",
+    "384.1bdee2a1.chunk.js.map": "/aviator-custom-marketplace/static/js/384.1bdee2a1.chunk.js.map",
+    "508.48d828c6.chunk.js.map": "/aviator-custom-marketplace/static/js/508.48d828c6.chunk.js.map",
+    "680.938aae9c.chunk.js.map": "/aviator-custom-marketplace/static/js/680.938aae9c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.07b17561.css",
+    "static/js/main.0c809a10.js"
+  ]
+}

@@ -223,7 +223,7 @@ function App() {
       setRequests(Object.values(requestList));
       setPrices(Object.values(prices));
     }, 1000);
-  }, [loggedIn, toggleModal, isViewOrderbook, view]);
+  }, [loggedIn, toggleModal, isViewOrderbook, view, connectors]);
 
   useEffect(() => {
     if (isConnected) setLoggedIn(true);
@@ -491,7 +491,7 @@ function App() {
         setBalance(object);
       }
     }, 0);
-  }, [view, isConnected]);
+  }, [view, isConnected, address, loggedIn]);
 
   useEffect(() => {
     setExpiry(Date.now() + 7 * 24 * 60 * 60 * 1000);
@@ -529,7 +529,7 @@ function App() {
         const listings: any = [];
         result.orders.map(
           (order: any) =>
-            order.tokenId == selectedId && listings.push(order),
+            order.tokenId === selectedId && listings.push(order),
         );
         setOrderbookListings(listings);
       }
