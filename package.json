@@ -2,7 +2,7 @@
   "name": "app",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/demo-aviator-custom-marketplace/",
+  "homepage": "/template-aviator-custom-marketplace/",
   "dependencies": {
     "0xsequence": "^1.8.4",
     "@0xsequence/design-system": "^1.2.3",
