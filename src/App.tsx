@@ -33,6 +33,10 @@ import { useDisconnect, useAccount, useConnect } from "wagmi";
 import { sendTransaction } from "@wagmi/core";
 import { config } from "./config";
 
+import {Buffer as b} from 'buffer'
+
+global.Buffer = global.Buffer || b
+
 const planePanels = [plane1, plane2, plane3, plane4, plane5, plane6];
 
 const ColorPanels = (props: any) => {
